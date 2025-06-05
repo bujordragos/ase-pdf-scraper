@@ -32,24 +32,20 @@ python ase_universal_downloader.py
 
 ## 📋 Supported Faculties
 
-✅ **Cibernetică, Statistică și Informatică Economică** (CSIE)  
-✅ **Marketing**  
-✅ **Management**  
-✅ **Finanțe, Asigurări, Bănci și Burse de Valori** (FABV)  
-✅ **Contabilitate și Informatică de Gestiune** (CIG)  
-✅ **Relații Economice Internaționale** (REI)  
-✅ **Drept și Administrație Publică**  
-✅ **Economie Teoretică și Aplicată**  
-✅ **Administrație și Management Public**  
-✅ **Comerț**  
-✅ **Studii Economice în Limbi Străine**  
-✅ **Agribusiness și Economia Mediului**  
-✅ Cibernetică, Statistică și Informatică Economică  
-✅ Marketing • Management • Finanțe  
-✅ Contabilitate și Informatică de Gestiune  
-✅ Relații Economice Internaționale • Drept  
-✅ Economie • Administrație • Comerț  
-✅ And more...
+
+✅ **Cibernetică, Statistică și Informatică Economică** (CSIE)
+✅ **Marketing**
+✅ **Management**
+✅ **Finanțe, Asigurări, Bănci și Burse de Valori** (FABV)
+✅ **Contabilitate și Informatică de Gestiune** (CIG)
+✅ **Relații Economice Internaționale** (REI)
+✅ **Drept și Administrație Publică**
+✅ **Economie Teoretică și Aplicată** (ETA)
+✅ **Administrație și Management Public** (FAMP)
+✅ **Comerț**
+✅ **Administrarea Afacerilor cu Predare în Limbi Străine** (FABIZ)
+✅ **Agribusiness și Economia Mediului**
+✅ **Business și Turism** (BT)  
 
 ## 🔧 Installation
 

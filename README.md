@@ -4,6 +4,8 @@
 
 A user-friendly tool that bypasses ASE's anti-automation measures and downloads all "obligatory" subject PDFs with clean, organized filenames.
 
+## 📸 Screenshot
+
 ![ASE PDF Scraper GUI](screenshots/GUI.png)
 
 ## ✨ Features
@@ -16,59 +18,49 @@ A user-friendly tool that bypasses ASE's anti-automation measures and downloads 
 
 ## 🚀 Quick Start
 
-### For Everyone (Recommended)
+### 🎨 GUI Version (Recommended)
 ```bash
 python ase_gui_downloader.py
 ```
 **OR** double-click: `run_gui.bat`
 
-### For Power Users
+### ⚙️ Command-Line Version  
 ```bash
 python ase_universal_downloader.py
 ```
-**OR** double-click: `run_universal_downloader.bat` (requires editing `USER_CONFIG` first)
+**OR** double-click: `run_universal_downloader.bat`
 
 ## 📋 Supported Faculties
 
 ✅ Cibernetică, Statistică și Informatică Economică  
-✅ Marketing • Management • Finanțe  
-✅ Contabilitate și Informatică de Gestiune  
+✅ Marketing • Management • Finanțe • Contabilitate  
 ✅ Relații Economice Internaționale • Drept  
-✅ Economie • Administrație • Comerț  
-✅ And more...
-
-## 🎮 How to Use
-
-1. **Run**: `python ase_gui_downloader.py` or double-click `run_gui.bat`
-2. **Select**: Your faculty, program, and study options from dropdowns
-3. **Download**: Click the button and watch it work!
-
-## 📁 Output
-
-```
-ASE_PDFs/
-└── Run_20250605_143022/
-    ├── Econometrie_20250605_143045.pdf
-    ├── Statistica_20250605_143052.pdf
-    └── [10+ more subjects...]
-```
-
-## ⚙️ Requirements
-
-- **Python 3.6+** 
-- **Internet connection**
-
-Dependencies install automatically when you run the `.bat` files!
+✅ Economie • Administrație • Comerț • Studii în Limbi Străine  
 
 ## 🔧 Installation
 
-```bash
-git clone https://github.com/yourusername/ase-pdf-scraper.git
-cd ase-pdf-scraper
-python ase_gui_downloader.py
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/ase-pdf-scraper.git
+   cd ase-pdf-scraper
+   ```
+
+2. **Run the GUI**:
+   ```bash
+   python ase_gui_downloader.py
+   ```
+
+## 📁 Output
+
+Downloads are organized in timestamped folders:
+```
+ASE_PDFs/Run_20250605_143022/
+├── Econometrie_20250605_143045.pdf
+├── Statistica_20250605_143052.pdf
+└── [10+ more subjects...]
 ```
 
-## 🎯 Why Use This?
+## 🎯 Why This Tool?
 
 - **Saves Hours**: No more manual clicking through ASE's complex forms
 - **Version Tracking**: Automatically timestamps downloads  
@@ -81,4 +73,4 @@ MIT License - Use responsibly and respect ASE's servers.
 
 ---
 
-**Created by ASE Student for ASE Students** • ⭐ Star if this helped you!
+**Created by ASE Student for ASE Students** • ⭐ **Star if you found this helpful!**

@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Downloads and logs
+ASE_PDFs/
+*.log
+*.html
+
+# Temporary files
+ase_dynamic_config_*.py
+temp_*.py
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+venv/
+env/
+.env

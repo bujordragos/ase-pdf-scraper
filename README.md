@@ -62,7 +62,7 @@ python ase_universal_downloader.py
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/ase-pdf-scraper.git
+   git clone https://github.com/bujordragos/ase-pdf-scraper.git
    cd ase-pdf-scraper
    ```
 
@@ -94,4 +94,4 @@ MIT License - Use responsibly and respect ASE's servers.
 
 ---
 
-**Created by ASE Student for ASE Students** • ⭐ **Star if you found this helpful!**
+**Created by ASE Student for ASE Students**

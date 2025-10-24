@@ -11,24 +11,39 @@ A user-friendly tool that bypasses ASE's anti-automation measures and downloads 
 ## ✨ Features
 
 - 🎨 **Beautiful GUI Interface** - No code editing required
-- 🌍 **Universal Support** - Works for ALL 12 ASE faculties  
+- 🌍 **Universal Support** - Works for ALL 12 ASE faculties
 - 🛡️ **Anti-Automation Bypass** - Smart form navigation
-- 📁 **Organized Downloads** - Timestamped folders for each run
+- 📁 **Clean Organization** - PDFs organized by semester with no timestamps
 - 🌐 **Multi-Language** - Romanian and English PDFs supported
+- 💾 **Settings Memory** - Remembers your last configuration
+- 📦 **Standalone .exe** - No Python installation needed!
 
 ## 🚀 Quick Start
 
-### 🎨 GUI Version (Recommended)
-```bash
-python ase_gui_downloader.py
-```
-**OR** double-click: `run_gui.bat`
+### For Students (No Coding Required)
 
-### ⚙️ Command-Line Version  
+1. **Download** the latest `ASE_PDF_Scraper.exe` from [Releases](../../releases)
+2. **Double-click** the .exe file
+3. **Select** your faculty, program, and year
+4. **Click** "Download Subject PDFs"
+5. **Done!** Find your PDFs in the `ASE_PDFs` folder
+
+### For Developers
+
 ```bash
-python ase_universal_downloader.py
+# Clone the repository
+git clone https://github.com/bujordragos/ase-pdf-scraper.git
+cd ase-pdf-scraper
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the GUI
+python ase_gui_downloader.py
+
+# OR build your own .exe
+python build_exe.py
 ```
-**OR** double-click: `run_universal_downloader.bat`
 
 ## 📋 Supported Faculties
 
@@ -71,22 +86,62 @@ python ase_universal_downloader.py
    python ase_gui_downloader.py
    ```
 
-## 📁 Output
+## 📁 Output Structure
 
-Downloads are organized in timestamped folders:
+Downloads are cleanly organized by semester:
 ```
-ASE_PDFs/Run_20250605_143022/
-├── Econometrie_20250605_143045.pdf
-├── Statistica_20250605_143052.pdf
-└── [10+ more subjects...]
+ASE_PDFs/
+├── Informatica_economica_Anul_III_2023-2026/
+│   ├── Semestrul_I/
+│   │   ├── Econometrie.pdf
+│   │   ├── Statistica.pdf
+│   │   └── ...
+│   └── Semestrul_II/
+│       ├── Retele_de_calculatoare.pdf
+│       └── ...
+├── _archive/              # Old downloads for comparison
+├── _logs/                 # Debug logs
+└── _debug/                # Troubleshooting files
 ```
 
 ## 🎯 Why This Tool?
 
 - **Saves Hours**: No more manual clicking through ASE's complex forms
-- **Version Tracking**: Automatically timestamps downloads  
+- **Auto-Archive**: Keeps old versions for comparison
+- **Clean Filenames**: No diacritics, organized by semester
 - **Reliable**: Handles ASE's anti-automation measures
 - **Universal**: Works for any ASE student, any faculty
+
+## 🔧 Building the .exe
+
+```bash
+# Build standalone executable (no Python needed to run it)
+python build_exe.py
+
+# Output: dist/ASE_PDF_Scraper.exe (~15MB)
+```
+
+The .exe includes everything - no Python, no pip install, just double-click and go!
+
+## 🛠️ Development
+
+### Project Structure
+```
+ase-pdf-scraper/
+├── ase_gui_downloader.py          # Main GUI application
+├── ase_universal_downloader.py    # Scraping logic
+├── build_exe.py                   # .exe builder
+├── requirements.txt               # Dependencies
+├── run_gui.bat                    # Quick launcher (Windows)
+└── README_EXE.txt                 # User instructions for .exe
+```
+
+### Maintenance Notes
+
+Faculty configs need updating ~once per year when new cohorts start. Update `FACULTY_CONFIGS` in `ase_gui_downloader.py`:
+- Add new year ranges (e.g., `2026-2029`)
+- Verify program names occasionally
+- Scraping uses keywords, so minor name differences still work
 
 ## 📜 License
 

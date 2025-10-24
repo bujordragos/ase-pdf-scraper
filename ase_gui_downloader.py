@@ -511,8 +511,8 @@ class ASEDownloaderGUI:
             }
 
             # Setup clean directory structure: ASE_PDFs/Informatica_economica_Anul_III_2023-2026/
-            gui_dir = Path(__file__).parent
-            downloads_dir = gui_dir / "ASE_PDFs"
+            # Use current working directory (where .exe was launched from)
+            downloads_dir = Path.cwd() / "ASE_PDFs"
 
             # Create folder name with program, year and study period
             program = self.selected_program.get().replace(" ", "_")  # "Informatica economica"

@@ -19,96 +19,104 @@ import ase_universal_downloader as downloader
 
 # ALL ASE FACULTIES - Complete list!
 FACULTY_CONFIGS = {
-    "Cibernetică, Statistică și Informatică Economică": {
+    "Cibernetică, Statistică și Informatică Economică (CSIE)": {
         'keywords': ['CIBERNETICA', 'CYBERNETICS', 'STATISTICA', 'INFORMATICA'],
         'programs': {
-            'Informatica economica': ['2023-2026', '2024-2027', '2025-2028'],
-            'Cibernetica economica': ['2023-2026', '2024-2027', '2025-2028'],
-            'Statistica': ['2023-2026', '2024-2027', '2025-2028']
+            # 4-year Bachelor programs (Licență)
+            'Informatica economica': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Cibernetica economica': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Informatica economica  (Engleza)': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Statistica ?i previziune economica': ['2021-2024', '2022-2025', '2023-2026', '2024-2027'],
+            'Statistica economica si data science': ['2025-2028'],
+            # 2-year Master programs
+            'Informatica economica (Master)': ['2024-2026', '2025-2027'],
+            'E-Business': ['2022-2024', '2023-2025', '2024-2026', '2025-2027'],
+            'Baze de date - suport pentru afaceri': ['2022-2024', '2023-2025', '2024-2026', '2025-2027'],
+            'Statistica aplicata si data science': ['2022-2024', '2023-2025', '2024-2026', '2025-2027'],
         }
     },
     "Marketing": {
         'keywords': ['MARKETING'],
         'programs': {
-            'Marketing': ['2023-2026', '2024-2027', '2025-2028'],
-            'Marketing (English)': ['2023-2026', '2024-2027', '2025-2028']
+            'Marketing': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Marketing (English)': ['2022-2025', '2023-2026', '2024-2027', '2025-2028']
         }
     },
     "Management": {
         'keywords': ['MANAGEMENT'],
         'programs': {
-            'Management': ['2023-2026', '2024-2027', '2025-2028'],
-            'Management (English)': ['2023-2026', '2024-2027', '2025-2028'],
-            'Antreprenoriat': ['2023-2026', '2024-2027', '2025-2028']
+            'Management': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Management (English)': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Antreprenoriat': ['2022-2025', '2023-2026', '2024-2027', '2025-2028']
         }
     },
-    "Finanțe, Asigurări, Bănci și Burse de Valori": {
+    "Finanțe, Asigurări, Bănci și Burse de Valori (FABV)": {
         'keywords': ['FINANTE', 'FINANCE', 'ASIGURARI', 'BANCI', 'BURSE'],
         'programs': {
-            'Finante': ['2023-2026', '2024-2027', '2025-2028'],
-            'Finance (English)': ['2023-2026', '2024-2027', '2025-2028'],
-            'Asigurari': ['2023-2026', '2024-2027', '2025-2028'],
-            'Banci': ['2023-2026', '2024-2027', '2025-2028']
+            'Finante': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Finance (English)': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Asigurari': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Banci': ['2022-2025', '2023-2026', '2024-2027', '2025-2028']
         }
     },
-    "Contabilitate și Informatică de Gestiune": {
+    "Contabilitate și Informatică de Gestiune (CIG)": {
         'keywords': ['CONTABILITATE', 'INFORMATICA DE GESTIUNE'],
         'programs': {
-            'Contabilitate si informatica de gestiune': ['2023-2026', '2024-2027', '2025-2028'],
-            'Contabilitate (English)': ['2023-2026', '2024-2027', '2025-2028']
+            'Contabilitate si informatica de gestiune': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Contabilitate (English)': ['2022-2025', '2023-2026', '2024-2027', '2025-2028']
         }
     },
-    "Relații Economice Internaționale": {
+    "Relații Economice Internaționale (REI)": {
         'keywords': ['REI', 'INTERNATIONALE', 'RELATII ECONOMICE'],
         'programs': {
-            'Relatii economice internationale': ['2023-2026', '2024-2027', '2025-2028'],
-            'International Business': ['2023-2026', '2024-2027', '2025-2028'],
-            'Business Administration': ['2023-2026', '2024-2027', '2025-2028']
+            'Relatii economice internationale': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'International Business': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Business Administration': ['2022-2025', '2023-2026', '2024-2027', '2025-2028']
         }
     },
     "Economie Teoretică și Aplicată": {
         'keywords': ['ECONOMIE', 'TEORETICA', 'APLICATA'],
         'programs': {
-            'Economie': ['2023-2026', '2024-2027', '2025-2028'],
-            'Economie si afaceri internationale': ['2023-2026', '2024-2027', '2025-2028']
+            'Economie': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Economie si afaceri internationale': ['2022-2025', '2023-2026', '2024-2027', '2025-2028']
         }
     },
     "Administrație și Management Public": {
         'keywords': ['ADMINISTRATIE', 'MANAGEMENT PUBLIC', 'PUBLICA'],
         'programs': {
-            'Administratie publica': ['2023-2026', '2024-2027', '2025-2028'],
-            'Management public': ['2023-2026', '2024-2027', '2025-2028']
+            'Administratie publica': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Management public': ['2022-2025', '2023-2026', '2024-2027', '2025-2028']
         }
     },
     "Drept și Administrație Publică": {
         'keywords': ['DREPT', 'JURIDICA'],
         'programs': {
-            'Drept': ['2024-2028', '2023-2027', '2022-2026', '2021-2025', '2020-2024'],
-            'Drept antreprenorial': ['2023-2025', '2022-2024', '2021-2023', '2020-2022'],
-            'Dreptul european al afacerilor': ['2024-2025']
+            'Drept': ['2021-2025', '2022-2026', '2023-2027', '2024-2028', '2025-2029'],
+            'Drept antreprenorial': ['2020-2022', '2021-2023', '2022-2024', '2023-2025'],
+            'Dreptul european al afacerilor': ['2024-2025', '2025-2026']
         }
     },
     "Comerț": {
         'keywords': ['COMERT', 'COMMERCE'],
         'programs': {
-            'Comert': ['2023-2026', '2024-2027', '2025-2028'],
-            'Comert international': ['2023-2026', '2024-2027', '2025-2028'],
-            'Turism': ['2023-2026', '2024-2027', '2025-2028']
+            'Comert': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Comert international': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Turism': ['2022-2025', '2023-2026', '2024-2027', '2025-2028']
         }
     },
-    "Studii Economice în Limbi Străine": {
-        'keywords': ['LIMBI STRAINE', 'ECONOMICE', 'FRANCEZA', 'GERMANA'],
+    "Studii Economice în Limbi Străine (FABIZ)": {
+        'keywords': ['LIMBI STRAINE', 'ECONOMICE', 'FRANCEZA', 'GERMANA', 'FABIZ'],
         'programs': {
-            'Economie (Franceza)': ['2023-2026', '2024-2027', '2025-2028'],
-            'Economie (Germana)': ['2023-2026', '2024-2027', '2025-2028'],
-            'Management (Franceza)': ['2023-2026', '2024-2027', '2025-2028']
+            'Administrarea afacerilor (Franceza)': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Administrarea afacerilor (Engleza)': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Economie (Franceza)': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
         }
     },
     "Agribusiness și Economia Mediului": {
         'keywords': ['AGRIBUSINESS', 'MEDIU', 'AGRICULTURA'],
         'programs': {
-            'Agribusiness': ['2023-2026', '2024-2027', '2025-2028'],
-            'Economia mediului': ['2023-2026', '2024-2027', '2025-2028']
+            'Agribusiness': ['2022-2025', '2023-2026', '2024-2027', '2025-2028'],
+            'Economia mediului': ['2022-2025', '2023-2026', '2024-2027', '2025-2028']
         }
     }
 }

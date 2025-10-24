@@ -132,7 +132,6 @@ ase-pdf-scraper/
 ├── ase_universal_downloader.py    # Scraping logic
 ├── build_exe.py                   # .exe builder
 ├── requirements.txt               # Dependencies
-├── run_gui.bat                    # Quick launcher (Windows)
 └── README_EXE.txt                 # User instructions for .exe
 ```
 

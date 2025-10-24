@@ -124,7 +124,7 @@ BASE_URL = "https://fisadisciplina.ase.ro/"
 BASE_DOWNLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ASE_PDFs")
 DATE_FORMAT = "%Y%m%d_%H%M%S"
 
-# Create a folder for this specific run
+# Will be set dynamically based on user's configuration
 RUN_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
 DOWNLOAD_DIR = os.path.join(BASE_DOWNLOAD_DIR, f"Run_{RUN_TIMESTAMP}")
 
@@ -140,11 +140,11 @@ HEADERS = {
 def setup_logging():
     """Setup logging"""
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-    log_dir = os.path.join(DOWNLOAD_DIR, "logs")
+    log_dir = os.path.join(BASE_DOWNLOAD_DIR, "_logs")
     os.makedirs(log_dir, exist_ok=True)
-    
-    log_file = os.path.join(log_dir, f"universal_download_{RUN_TIMESTAMP}.log")
-    
+
+    log_file = os.path.join(log_dir, f"download_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log")
+
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
@@ -273,31 +273,37 @@ def find_program_and_year(soup, logger):
     
     return None
 
+def remove_diacritics(text):
+    """Remove Romanian diacritics from text"""
+    diacritics_map = {
+        'ă': 'a', 'Ă': 'A',
+        'â': 'a', 'Â': 'A',
+        'î': 'i', 'Î': 'I',
+        'ș': 's', 'Ș': 'S',
+        'ț': 't', 'Ț': 'T'
+    }
+    for diacritic, replacement in diacritics_map.items():
+        text = text.replace(diacritic, replacement)
+    return text
+
 def extract_clean_subject_name(full_text):
     """Extract clean subject name based on language preference"""
     if USER_CONFIG['language'] == 'english':
-        # For English, extract the part after <br />
+        # For English, extract the part after <br /> (newline)
         if '\n' in full_text:
             parts = full_text.split('\n')
             if len(parts) > 1:
                 return parts[1].strip()
         return full_text
     else:
-        # For Romanian, extract the part before <br />
+        # For Romanian, extract the part before <br /> (newline)
+        # The HTML structure is: "Romanian Name\nEnglish Name"
         if '\n' in full_text:
-            return full_text.split('\n')[0].strip()
-        else:
-            # Split at patterns that clearly indicate English translation starts
-            import re
-            # Look for Romanian text followed by English (starts with capital letter after lowercase)
-            match = re.match(r'^([a-zA-ZăâîșțĂÂÎȘȚ\s]+?)(?=[A-Z][a-z])', full_text)
-            if match:
-                romanian_part = match.group(1).strip()
-                # Only return if it's reasonable length
-                if len(romanian_part) > 3:
-                    return romanian_part
-        
-        return full_text
+            romanian_name = full_text.split('\n')[0].strip()
+            return romanian_name
+
+        # If no newline, just return the full text (it's already Romanian-only)
+        return full_text.strip()
 
 def navigate_to_subjects(session, logger):
     """Navigate through the website to find subjects"""
@@ -332,11 +338,14 @@ def navigate_to_subjects(session, logger):
     
     soup = BeautifulSoup(response.content, 'html.parser')
     logger.info("Faculty selected successfully")
-    
-    # Save debug page
-    debug_file = os.path.join(DOWNLOAD_DIR, "faculty_programs.html")
+
+    # Save debug page to _debug folder
+    debug_dir = os.path.join(BASE_DOWNLOAD_DIR, "_debug")
+    os.makedirs(debug_dir, exist_ok=True)
+    debug_file = os.path.join(debug_dir, f"faculty_programs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html")
     with open(debug_file, 'w', encoding='utf-8') as f:
         f.write(response.text)
+    logger.debug(f"Debug page saved to: {debug_file}")
     
     # Step 3: Find and select program/year
     action, form_data = get_form_data(soup)
@@ -358,121 +367,150 @@ def navigate_to_subjects(session, logger):
     
     soup = BeautifulSoup(response.content, 'html.parser')
     logger.info(f"Successfully reached {USER_CONFIG['target_year']} subjects page!")
-    
-    # Save subjects page
-    debug_file = os.path.join(DOWNLOAD_DIR, "subjects_page.html")
+
+    # Save subjects page to _debug folder
+    debug_dir = os.path.join(BASE_DOWNLOAD_DIR, "_debug")
+    os.makedirs(debug_dir, exist_ok=True)
+    debug_file = os.path.join(debug_dir, f"subjects_page_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html")
     with open(debug_file, 'w', encoding='utf-8') as f:
         f.write(response.text)
+    logger.debug(f"Subjects page saved to: {debug_file}")
     
     return soup
 
 def find_obligatory_subjects(soup, logger):
-    """Find all obligatory subjects"""
+    """Find all obligatory subjects with semester information"""
     logger.info("Searching for obligatory subjects...")
-    
+
     subjects = []
     seen_subjects = set()
-    
+
     # Determine which download buttons to look for
     button_pattern = 'ProgramaRO' if USER_CONFIG['language'] == 'romanian' else 'ProgramaEN'
-    
-    # Find all download buttons
-    download_buttons = soup.find_all('input', type='image')
-    target_buttons = [btn for btn in download_buttons if button_pattern in btn.get('onclick', '')]
-    
-    logger.info(f"Found {len(target_buttons)} {USER_CONFIG['language']} PDF download buttons")
-    
-    for button in target_buttons:
-        # Get the row containing this button
-        row = button.find_parent('tr')
-        if not row:
-            continue
-            
-        # Check if this row contains an obligatory subject (marked with 'O')
-        cells = row.find_all(['td', 'th'])
-        is_obligatory = False
-        subject_name = "Unknown_Subject"
-        
-        # Look for 'O' in the type column and extract subject name
-        for cell in cells:
-            cell_text = cell.get_text(strip=True)
-            
-            # Check if this is the type column with 'O'
-            if cell_text == 'O':
-                is_obligatory = True
-                
-                # Get subject name from first cell (subject column)
-                if len(cells) > 0:
-                    subject_cell = cells[0]
-                    full_text = subject_cell.get_text(strip=True)
-                    subject_name = extract_clean_subject_name(full_text)
-                
-                break
-        
-        if is_obligatory:
-            # Clean subject name for deduplication
-            clean_subject = re.sub(r'[^a-zA-ZăâîșțĂÂÎȘȚ\s]', '', subject_name).lower().strip()
-            
-            # Skip if we've already found this subject
-            if clean_subject in seen_subjects:
+
+    # Find all tables (subjects are usually in tables)
+    tables = soup.find_all('table')
+
+    for table in tables:
+        current_semester = None  # Reset for each table
+        rows = table.find_all('tr')
+
+        for row in rows:
+            # Check if this row is a semester header
+            row_text = row.get_text(strip=True)
+            if 'Semestrul I' in row_text and 'Semestrul II' not in row_text:
+                current_semester = 'Semestrul_I'
+                logger.info(f"Found semester header: {current_semester}")
                 continue
-                
-            seen_subjects.add(clean_subject)
-            
-            # Extract download parameters from button onclick
-            onclick = button.get('onclick', '')
-            match = re.search(r"'([^']+)','([^']+)'", onclick)
-            if match:
-                subjects.append({
-                    'name': subject_name,
-                    'target': match.group(1),
-                    'argument': match.group(2)
-                })
-                logger.info(f"Found: {subject_name}")
-    
+            elif 'Semestrul II' in row_text:
+                current_semester = 'Semestrul_II'
+                logger.info(f"Found semester header: {current_semester}")
+                continue
+
+            # Find download button in this row
+            button = row.find('input', type='image')
+            if not button or button_pattern not in button.get('onclick', ''):
+                continue
+
+            # Check if this row contains an obligatory subject (marked with 'O')
+            cells = row.find_all(['td', 'th'])
+            is_obligatory = False
+            subject_name = "Unknown_Subject"
+
+            # Look for 'O' in the type column and extract subject name
+            for cell in cells:
+                cell_text = cell.get_text(strip=True)
+
+                # Check if this is the type column with 'O'
+                if cell_text == 'O':
+                    is_obligatory = True
+
+                    # Get subject name from first cell (subject column)
+                    if len(cells) > 0:
+                        subject_cell = cells[0]
+                        # Use separator='\n' to preserve line breaks from <br> tags
+                        full_text = subject_cell.get_text(separator='\n', strip=True)
+                        subject_name = extract_clean_subject_name(full_text)
+
+                    break
+
+            if is_obligatory:
+                # Clean subject name for deduplication
+                clean_subject = re.sub(r'[^a-zA-ZăâîșțĂÂÎȘȚ\s]', '', subject_name).lower().strip()
+
+                # Skip if we've already found this subject
+                if clean_subject in seen_subjects:
+                    continue
+
+                seen_subjects.add(clean_subject)
+
+                # Extract download parameters from button onclick
+                onclick = button.get('onclick', '')
+                match = re.search(r"'([^']+)','([^']+)'", onclick)
+                if match:
+                    subjects.append({
+                        'name': subject_name,
+                        'target': match.group(1),
+                        'argument': match.group(2),
+                        'semester': current_semester if current_semester else 'Unknown'
+                    })
+                    logger.info(f"Found: {subject_name} ({current_semester if current_semester else 'Unknown semester'})")
+
     logger.info(f"Total obligatory subjects found: {len(subjects)}")
     return subjects
 
-def download_pdfs(session, subjects, soup, logger):
-    """Download all PDFs"""
+def download_pdfs(session, subjects, soup, logger, cancel_check=None):
+    """Download all PDFs organized by semester
+
+    Args:
+        cancel_check: Optional callable that returns True if download should be canceled
+    """
     logger.info("Starting downloads...")
-    
+
     success_count = 0
-    
+
     for i, subject in enumerate(subjects, 1):
-        logger.info(f"Downloading {i}/{len(subjects)}: {subject['name']}")
-        
+        # Check if user canceled
+        if cancel_check and cancel_check():
+            logger.warning("Download canceled by user")
+            break
+
+        logger.info(f"Downloading {i}/{len(subjects)}: {subject['name']} [{subject.get('semester', 'Unknown')}]")
+
         try:
             # Get current form data
             action, form_data = get_form_data(soup)
             if not action:
                 logger.error(f"No form data for {subject['name']}")
                 continue
-            
+
             # Set download parameters
             form_data['__EVENTTARGET'] = subject['target']
             form_data['__EVENTARGUMENT'] = subject['argument']
-            
+
             # Submit download request
             response = session.post(action, data=form_data)
-            
+
             if response.status_code == 200 and response.content.startswith(b'%PDF'):
-                # Save PDF with clean name
-                timestamp = datetime.now().strftime(DATE_FORMAT)
-                
-                # Clean filename for Windows
-                clean_name = re.sub(r'[<>:"/\\|?*]', '_', subject['name'])
+                # Create semester subfolder
+                semester = subject.get('semester', 'Unknown')
+                semester_dir = os.path.join(DOWNLOAD_DIR, semester)
+                os.makedirs(semester_dir, exist_ok=True)
+
+                # Clean filename: remove diacritics, clean special chars, remove extra spaces
+                clean_name = remove_diacritics(subject['name'])
+                clean_name = re.sub(r'[<>:"/\\|?*]', '_', clean_name)
                 clean_name = re.sub(r'\s+', '_', clean_name)
                 clean_name = clean_name.strip('._')
-                
-                filename = f"{clean_name}_{timestamp}.pdf"
-                
-                filepath = os.path.join(DOWNLOAD_DIR, filename)
+
+                filename = f"{clean_name}.pdf"
+
+                filepath = os.path.join(semester_dir, filename)
                 with open(filepath, 'wb') as f:
                     f.write(response.content)
-                
+
                 size_kb = len(response.content) // 1024
-                logger.info(f"SUCCESS: Saved {filename} ({size_kb} KB)")
+                logger.info(f"SUCCESS: Saved {semester}/{filename} ({size_kb} KB)")
                 success_count += 1
             else:
                 logger.error(f"Download failed for {subject['name']}")
@@ -520,15 +558,19 @@ def main():
         logger.info("=" * 50)
         logger.info(f"COMPLETED! Downloaded {success_count}/{len(subjects)} PDFs")
         logger.info(f"All files saved to: {DOWNLOAD_DIR}")
-        
+
         print(f"\nDownload complete! Check {DOWNLOAD_DIR} for your files.")
-        print(f"Structure:")
-        print(f"   Run_{RUN_TIMESTAMP}/")
-        print(f"      [{len(subjects)} PDF files]")
-        print(f"      logs/")
-        print(f"         universal_download_{RUN_TIMESTAMP}.log")
-        print(f"      faculty_programs.html")
-        print(f"      subjects_page.html")
+        print(f"\nClean Structure:")
+        print(f"   ASE_PDFs/")
+        print(f"      {os.path.basename(DOWNLOAD_DIR)}/")
+        print(f"         Semestrul_I/")
+        print(f"            [PDF files - no diacritics, full names]")
+        print(f"         Semestrul_II/")
+        print(f"            [PDF files - no diacritics, full names]")
+        print(f"      _logs/")
+        print(f"         download_*.log")
+        print(f"      _debug/  (for troubleshooting)")
+        print(f"      _archive/  (old downloads for comparison)")
         
     except ValueError as e:
         print(f"Configuration Error: {e}")

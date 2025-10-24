@@ -9,15 +9,26 @@ ASE_PDFs/
 *.log
 *.html
 
+# Build files
+build/
+dist/
+*.spec
+*.exe
+
+# Auto-generated settings
+gui_settings.json
+
 # Temporary files
 ase_dynamic_config_*.py
 temp_*.py
+nul
 
 # IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
+.claude/
 
 # OS files
 .DS_Store
